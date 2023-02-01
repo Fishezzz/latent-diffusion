@@ -43,6 +43,12 @@ conda activate ldm
 
 ### Possible extra steps
 
+[Install Intel optimization for TensorFlow](https://www.intel.com/content/www/us/en/developer/articles/guide/optimization-for-tensorflow-installation-guide.html).
+
+```
+conda install tensorflow -c intel
+```
+
 Follow the following links to fix some TensorRT errors caused by missing CUDA libraries.
 - https://github.com/tensorflow/tensorflow/issues/57679#issuecomment-1249197802
 - https://stackoverflow.com/questions/69917132/could-not-load-dynamic-library-libcudart-so-11-0-in-conda-enviroment
