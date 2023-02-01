@@ -41,6 +41,49 @@ conda env create -f environment.yaml
 conda activate ldm
 ```
 
+### Possible extra steps
+
+Follow the following links to fix some TensorRT errors caused by missing CUDA libraries.
+- https://github.com/tensorflow/tensorflow/issues/57679#issuecomment-1249197802
+- https://stackoverflow.com/questions/69917132/could-not-load-dynamic-library-libcudart-so-11-0-in-conda-enviroment
+
+```
+pip install --upgrade setuptools pip
+pip install nvidia-pyindex
+```
+
+Install your favorite TensorRT version
+- py3.10 -> available from 8.4.0.+
+- py3.9 -> available from 8.0.+
+- py3.8 -> available from 7.2.2.+
+
+```
+pip install nvidia-tensorrt==7.2.3.4
+```
+
+Verify that TensorRT is installed correctly.
+
+```
+python3 -c "import tensorrt; print(tensorrt.__version__); assert tensorrt.Builder(tensorrt.Logger())"
+```
+
+Create `conda_envs/ldm/etc/conda/activate.d/env_vars.sh` and add this to the file:
+
+```sh
+#!/bin/sh
+
+export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$CONDA_PREFIX/lib"
+export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$CONDA_PREFIX/lib/python3.8/site-packages/tensorrt"
+export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$CONDA_PREFIX/envs/tf/lib"
+export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$CONDA_PREFIX/envs/tf/lib/python3.8/site-packages/tensorrt"
+```
+
+Verify that your GPU gets detected.
+
+```
+python3 -c "import tensorflow as tf; print(tf.config.list_physical_devices('GPU'))"
+```
+
 # Pretrained Models
 A general list of all available checkpoints is available in via our [model zoo](#model-zoo).
 If you use any of these models in your work, we are always happy to receive a [citation](#bibtex).
